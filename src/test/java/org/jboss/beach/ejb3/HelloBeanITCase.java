@@ -21,53 +21,35 @@
  */
 package org.jboss.beach.ejb3;
 
-import static org.junit.Assert.assertEquals;
+import org.junit.Test;
 
-import java.net.URL;
-import java.util.Date;
-import java.util.Properties;
-
-import javax.ejb.EJBContainer;
+import javax.ejb.embeddable.EJBContainer;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
+import java.util.Date;
 
-import org.jboss.logging.Logger;
-import org.junit.Test;
+import static org.junit.Assert.assertEquals;
 
 /**
  * @author <a href="mailto:cdewolf@redhat.com">Carlo de Wolf</a>
  * @version $Revision: $
  */
-public class HelloBeanTestCase
+public class HelloBeanITCase
 {
-   private static final Logger log = Logger.getLogger(HelloBeanTestCase.class);
-   
-   private static String getBaseURLToResource(String resource)
-   {
-      URL url = Thread.currentThread().getContextClassLoader().getResource(resource);
-      String s = url.toString();
-      return s.substring(0, s.length() - resource.length());
-   }
-   
    @Test
    public void test1() throws NamingException
    {
-      log.info("Test #1");
-      
-      Properties properties = new Properties();
-      // Not according to spec!
-      properties.setProperty(EJBContainer.EMBEDDABLE_MODULES_PROPERTY, getBaseURLToResource("org/jboss/beach/ejb3/HelloBean.class"));
-      EJBContainer container = EJBContainer.createEJBContainer(properties);
-      
+      EJBContainer container = EJBContainer.createEJBContainer();
+
       // Note that global naming isn't working yet.
       InitialContext ctx = new InitialContext();
       Hello bean = (Hello) ctx.lookup("HelloBean/local");
-      
+
       String now = new Date().toString();
       String actual = bean.sayHello(now);
-      
+
       assertEquals("Hello " + now, actual);
-      
+
       container.close();
    }
 }

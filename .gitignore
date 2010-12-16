@@ -5,3 +5,5 @@
 /ObjectStore
 *.iml
 target
+# TODO: setup properly
+/${jboss.boot.server.log.dir}
